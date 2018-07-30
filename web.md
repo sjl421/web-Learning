@@ -1617,10 +1617,49 @@ function(array) {
 
 > 函数执行完毕，需要判断是否进行作用域销毁
 
-> 
+> 函数执行会形成一个私有的作用域，让里面的私有变量和外界互不影响(相互不干扰,外面的无法直接获取里面的变量值),此时我们可以理解为私有作用域把私有变量保护起来，我们把这种机制称之为“闭包”。
+
+
+> `栈内存`：又称作用域，提供一个JS代码的执行环境
+> `堆内存`：所有的引用数据类型，需要存储的内容都在堆内存中
 
 
 
+##### 形参和实参
+
+```javascript
+
+function funcName(parameters){//这里定义的是形参
+
+}
+funcName(1,2,3,4);//这里传递了实参，是实际传进去的值
+
+```
+注意：
+
+ - 定义了形参，但是执行的时候可以不传，此时默认实参的值是undefined
+ - 传递的实参可以比形参多，多传的值不处理
+ - 所有的形参存储在一个集合变量arguments中，当我们不知道会具体传递几个值时，无法设置形参的个数，此时就可以使用arguments，这是函数内置的变量，注意该变量不需要显式的写在函数定义中，不管是否定义了形参，arguments中均存储了所有的实参信息
+ - arguments是一个类数组集合，以数字作为索引，从0开始，有length属性，存储的是当前集合的长度，也就是当前实参的个数，此外，还有一个属性callee，表示当前函数自身，而arguments.callee.caller则表示当前函数在哪执行的(宿主函数，全局作用域下为null)
+ - 严格模式下，arguments，callee，caller等属性无法使用("use strict")
+
+```javascript
+function sum() {
+    var total = null;
+    for(var i = 0; i < arguments.length; i++){
+        var item = arguments[i];
+        item = Number(item);
+        if(!isNaN(item)){
+            total += item;
+        }
+        
+    }
+}
+
+sum(1,2,3,4,5,6);
+
+```
+ 
 ##### 
 
 
