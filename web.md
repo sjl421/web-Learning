@@ -1725,78 +1725,218 @@ function sum(){
 示例图如下：
 ![此处输入图片的描述][25]
 
+> 全局作用域下，var声明的变量相当于一个全局变量，同时也相当于window的一个属性，会进行预解释，不加var的变量声明相当于给window增加了一个属性，实际上相当于window.xxx
+> JS中在不进行任何特殊处理的情况下，上面的代码报错，下面的代码不再执行
+> 注意获取和赋值的区别，如果是获取的情况，如果直到window也找不到，就报错；如果是赋值的额情况下，如果直到window也没找到，就给window添加一个属性。
+
+预解释带来的副作用：
+> 预解释时，不论if条件是否成立，带var的都要进行预解释
+> 预解释只针对等号左边的，等号右边的不会进行预解释
+> 自执行函数在全局作用域下不进行预解释，当执行到函数的位置时，定义和执行一起完成
+> return 下面的代码虽然不执行，但是会进行预解释，return后面的是返回值，不进行预解释
+> 在js中如果变量的名字和函数的名字重复了，只会保留一个，已经声明过的不会重新声明，但会重新赋值
+
 
 ##### 作用域链
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#####
+> 当前函数在哪个作用域下定义的，它的上级作用域就是谁，和函数在哪执行无关
+
+
+##### 内存释放与销毁
+null:空对象引用
+堆内存的释放：
+> 对象数据类型或者函数数据类型在定义时会开辟堆内存空间，当一个引用数据类型被变量引用时，该引用数据类型不能被销毁，直到没有变量引用该引用数据时，浏览器会在空闲时将引用数据空间回收
+
+栈内存的释放：
+> 注意只有函数执行才产生私有作用域
+> 全局作用域只有当浏览器关闭页面时才进行销毁
+> 私有作用域，一般当私有作用域代码执行完成后会主动进行释放和销毁，但是存在特殊情况，即当前私有作用域中的部分内容被作用域以外的东西占用了，当前作用域便不能销毁
+
+私有作用域不能销毁的情况：
+ - 函数返回了一个引用数据类型的值，并且在函数的外面被变量引用，这种情况下一般都不会销毁
+ - 函数内部对外部的引用变量进行属性赋值等操作，这种情况也不销毁(根因仍然是第一条)
+ - 如果函数返回了一个函数类型，并且该函数类型在作用域外面被执行，这种情况不会立即销毁，而是在返回的函数执行完之后才销毁
+
+举例：
+```javascript
+
+function fn() {
+    var i = 10;
+    return function(n) {
+        console.log(n + (++i));
+    }
+}
+
+var f = fn();
+f(10);//21
+f(20);//32
+fn()(10);//21
+fn()(20);//31
+```
+
+```javascript
+function fn(i) {
+    return function(n) {
+        console.log(n + (i++));
+    }
+}
+
+var f = fn(13);
+f(12);//25
+f(14);//28
+fn(15)(12);//27
+fn(16)(13);//29
+
+```
  
+##### this关键字
+this代表的当前行为执行的主体，与this的行为主体与在哪执行/定义无关
+
+如何区分this?
+
+ - 函数执行，首先看函数名前面是否有"."，如果有，"."前是谁this就指代谁，如果没有，this就是window
+```javascript
+function fn(){
+    console.log(this)
+}
+
+function sum(){
+    fn();
+}
+sum() // this -> window
+var obj = {
+    sum: function(){
+        //sum函数里的this指向obj
+        fn();//fn里面的this指向window，注意跟函数如何执行有关，这里函数前没有"."，所有this指向window
+    }
+};
+obj.sum();//this -> window, 这里要注意下
+
+
+
+```
+
+ - 自执行函数中的this指向window
+ - 给元素的某一个事件绑定方法，当事件触发时，执行对应的方法，方法中的this是当前的元素
+```javascript
+function fn() {
+    console.log(this);
+}
+
+document.getElementById('div1').onclick = fn;//this指向div
+document.getElementById('div2').onclick = function {
+    fn();//this指向window
+}
+```
+
+举例：
+```html
+<div class="box">
+    <div id="btn">
+        <span id="spanNum">0</span>
+    </div>
+</div>
+<script type="text/javascript">
+    var oBtn = document.getElementById("btn");
+    var spanNum = document.getElementById("spanNum");
+    //方式1
+    ~function(){
+        var count = 0;
+        oBtn.onclick = function() {
+            count++;
+            spanNum.innerHTML = count;
+        }
+    }();
+    
+    //方式2
+    oBtn.onclick = (function(){
+        var count = 0;
+        return function (){
+            count++;
+            spanNum.innerHTML = count;
+        }
+    })();
+    
+    //方式3
+    oBtn.onclick = function () {
+        spanNum.innerHTML++;
+    }
+    
+    //方式4
+    oBtn.count = 0;
+    oBtn.onclick = function(){
+        spanNum.innerHTML = ++this.count;
+    }
+</script>
+```
+
+ 
+##### 单例模式
+单例模式也称作为单子模式，更多的也叫做单体模式。为软件设计中较为简单但是最为常用的一种设计模式。
+
+单例模式的思路是：一个类能返回一个对象的引用（并且永远是同一个）和一个获得该实例的方法（静态方法，通常使用 getInstance 名称）。那么当我们调用这个方法时，如果类持有的引用不为空就返回该引用，否者就创建该类的实例，并且将实例引用赋值给该类保持的那个引用再返回。同时将该类的构造函数定义为私有方法，避免其他函数使用该构造函数来实例化对象，只通过该类的静态方法来得到该类的唯一实例。
+
+##### 工厂模式
+
+_js中不存在重载，方法名一样的话，后面会把前面的覆盖，最终只保留一个_
+
+#### 构造函数
+构造函数的目的就是为了创建一个自定义类，并创建这个类的实例，但构造函数仍然是一个函数
+
+    //构造函数格式,返回值就是类的一个实例
+    var obj = new Class();//此时Class为类名
+    //语法
+    function Class(){
+        this.attr = value;//this代表当前类的一个实例，由浏览器帮助我们创建
+        
+        ......
+        //函数执行完后，浏览器会默认将对象返回，不需我们显式return,构造函数可以包含返回语句（不推荐），但返回值必须是this，或者其它非对象类型的值。
+    }
+    
+注意构造函数也可以当做普通函数调用，要注意此时函数中的this指向。    
+    
+```javascript
+
+function Fn(){
+    this.attr = 100;//指向当前类的实例
+    this.getAttr = function () {
+        console.log(this.attr);//需要根据getAttr的具体调用来确定this的指向
+    }
+    //return this; return可以加，但不推荐;加上return语句，如果返回的是基本数据类型的值，将不产生影响，如果返回的是引用数据类型，将会替换掉原有类型
+}
+
+var f = new Fn();//不需要传参时，"()"可以省略
+f.getAttr();//this -> f
+var s = f.getAttr;
+s();//this -> window
+
+//检测某一个实例是否属于一个类
+f instanceof Fn;//true
+f instanceof Object;//true
+
+"attr" in f;//检测一个属性(包括共有属性和私有属性)是否属于这个对象
+f.hasOwnProperty("attr");//用来检测某一个属性是否为这个对象的私有属性
+```    
+    
+```javascript
+function createPerson(name, qq) { //构造函数 构建出一个对象；
+    this.qq = qq;
+    this.name = name
+    this.showName = function() {
+        alert('my name =' + this.name)
+    }
+    this.showQQ = function() {
+        alert('my qq =' + this.qq)
+    }
+}
+var obj = new createPerson('Mr Lan', '1079161148');
+var obj2 = new createPerson('Mr Li', '1079161168');
+obj.showName();
+obj.showQQ();
+console.log(obj===obj2);
+```
+ 
+
 
 
 
