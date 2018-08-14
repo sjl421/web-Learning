@@ -1,0 +1,1042 @@
+﻿# python全栈
+
+标签（空格分隔）： python 全栈
+
+[TOC]
+---
+
+python全栈教程，来自老男孩第三期
+
+---
+### python基础
+#### python 分类
+
+ - cython
+ - jython
+ - ironPython
+
+#### python IDE
+##### Pycharm
+
+
+#### python 变量
+变量命名：字母、数字、下划线，不能以数字开头，不能是关键字
+
+```ipython
+In [4]: a=1
+```
+
+#### python 数据类型
+
+1、字符串
+```ipython
+In [12]: s='hello'
+
+In [13]: ss="hello"
+
+In [14]: sss='''
+    ...: hello, i love python
+    ...: '''
+    
+In [15]: s+ss+sss
+Out[15]: 'hellohello\nhello, i love python\n'
+
+In [16]: s*3
+Out[16]: 'hellohellohello'
+```
+
+```ipython
+
+In [37]: s="hello, python"
+
+In [38]: s.capitalize() #首字母大写
+Out[38]: 'Hello, python'
+
+In [39]: s.casefold() #小写，支持多语言
+Out[39]: 'hello, python'
+
+In [40]: s.lower() #小写
+Out[40]: 'hello, python'
+
+In [42]: s.center(20) #字符串居中
+Out[42]: '   hello, python    '
+
+In [43]: s.center(20, '~')
+Out[43]: '~~~hello, python~~~~'
+
+In [45]: s.count('l') #字符串中的子序列出现的次数
+Out[45]: 2
+
+In [48]: s.count('t', 3)
+Out[48]: 1
+
+In [49]: s.count('t', 3, 5)
+Out[49]: 0
+
+In [50]: s.startswith('h') #是否以指定的字符串开头
+Out[50]: True
+
+In [51]: s.endswith('n') #是否以指定的字符串结尾
+Out[51]: True
+
+In [52]: s.find('ll') #在字符串中寻找子序列，找到了返回索引，找不到返回-1
+Out[52]: 2
+
+In [54]: s.index('ll') #在字符串中寻找子序列，找到了返回索引，找不到返回异常
+Out[54]: 2
+
+In [55]: s.isalnum() #判断字符串中是否是字母数字
+Out[55]: False
+
+In [57]: s.isalpha() #判断字符串中是否是字母
+Out[57]: False
+
+In [58]: s.isdecimal() #判断字符串中是否是小数
+Out[58]: False
+
+In [59]: s.isdigit() #判断字符串中是否是数字
+Out[59]: False
+
+In [60]: s.isidentifier() #判断字符串是否是有效的标识符
+Out[60]: False
+
+In [61]: s.islower() #判断字符串是否是小写的
+Out[61]: True
+
+In [62]: s.isnumeric() #判断字符串是否只有数字
+Out[62]: False
+
+In [63]: s.isprintable() #判断字符串中的字符是否是可打印的
+Out[63]: True
+
+In [64]: s.isspace() #判断是否是空白字符
+Out[64]: False
+
+In [66]: s.isupper() #判断字符串是否是大写的
+Out[66]: False
+
+In [73]: s='hello\tpython'
+
+In [74]: s.expandtabs(2) #将tab用空格展开
+Out[74]: 'hello python'
+
+In [75]: s.expandtabs(3)
+Out[75]: 'hello python'
+
+In [76]: s.expandtabs(4)
+Out[76]: 'hello   python'
+
+In [84]: ' '.join(s) #将序列用指定字符拼接起来
+Out[84]: 'h e l l o \t p y t h o n'
+
+In [85]: s.ljust(30, '$') #左对齐
+Out[85]: 'hello\tpython$$$$$$$$$$$$$$$$$$'
+
+In [86]: s.rjust(30, '$') #右对齐
+Out[86]: '$$$$$$$$$$$$$$$$$$hello\tpython'
+
+In [87]: s.zfill(30) #右对齐，并用0填充
+Out[87]: '000000000000000000hello\tpython'
+
+In [88]: s='  hello, python     '
+
+In [89]: s.strip() #去除字符集中的字符，默认空白字符
+Out[89]: 'hello, python'
+
+In [90]: s.lstrip() #去除左边字符集中的字符，默认空白字符
+Out[90]: 'hello, python     '
+
+In [91]: s.rstrip() #去除右边字符集中的字符，默认空白字符
+Out[91]: '  hello, python'
+
+In [1]: o = "aeiou"
+In [2]: n = "12345"
+In [3]: s="hcwebkashdfqwa"
+In [5]: m=str.maketrans(o,n)
+In [6]: s.translate(m) #按照字符转换表进行替换
+Out[6]: 'hcw2bk1shdfqw1'
+
+In [8]: s.partition('sh') # 将字符串按照指定部分分割成三份
+Out[8]: ('hcwebka', 'sh', 'dfqwa')
+
+In [9]: s.rpartition('sh') # 将字符串按照指定部分从右向前分割成三份
+Out[9]: ('hcwebka', 'sh', 'dfqwa')
+
+In [12]: s.split('h') # 按照指定的字符进行字符串分割
+Out[12]: ['', 'cwebkas', 'dfqwa']
+
+In [13]: s.rsplit('h') # 按照指定的字符从右进行字符串分割
+Out[13]: ['', 'cwebkas', 'dfqwa']
+
+In [14]: s="asdfkjhsa\nasuidhf\nuiewhfc\n"
+
+In [15]: s.splitlines() #按照换行符进行分割
+Out[15]: ['asdfkjhsa', 'asuidhf', 'uiewhfc']
+
+In [17]: s.swapcase() # 大小写转换
+Out[17]: 'ASDFKJHSA\nASUIDHF\nUIEWHFC\n'
+```
+字符串支持按照索引进行获取，索引从0开始。
+```ipython
+In [18]: s='hjsidfjkewfasdfasd'
+
+In [19]: s[0]
+Out[19]: 'h'
+
+In [20]: s[1]
+Out[20]: 'j'
+
+In [21]: s[1:10]
+Out[21]: 'jsidfjkew'
+
+In [22]: s[:10]
+Out[22]: 'hjsidfjkew'
+
+In [23]: s[:]
+Out[23]: 'hjsidfjkewfasdfasd'
+
+In [24]: s[2:-1]
+Out[24]: 'sidfjkewfasdfas'
+
+In [25]: s[:-1]
+Out[25]: 'hjsidfjkewfasdfas'
+
+In [26]: s[-9:-1]
+Out[26]: 'wfasdfas'
+```
+
+> 字符串是一个不可变对象,一旦创建就不可改变
+
+字符串格式化：
+
+    %[(name)][flags][width].[precision]typecode
+    
+
+ - (name)      可选，用于选择指定的key
+ - flags    可选，可供选择的值有:
+   - \+ 右对齐；正数前加正好，负数前加负号
+   - \- 左对齐；正数前无符号，负数前加负号
+   - 空格 右对齐；正数前加空格，负数前加负号
+   - 0 右对齐；正数前无符号，负数前加负号；用0填充空白处
+ - width       可选，占有宽度
+ - .precision   可选，小数点后保留的位数
+ - typecode    必选
+   - s，获取传入对象的__str__方法的返回值，并将其格式化到指定位置
+   - r，获取传入对象的__repr__方法的返回值，并将其格式化到指定位置
+   - c，整数：将数字转换成其unicode对应的值，10进制范围为 0 <= i <= 1114111（py27则只支持0-255）；字符：将字符添加到指定位置
+   - o，将整数转换成八进制表示，并将其格式化到指定位置
+   - x，将整数转换成十六进制表示，并将其格式化到指定位置
+   - d，将整数、浮点数转换成十进制表示，并将其格式化到指定位置
+   - e，将整数、浮点数转换成科学计数法，并将其格式化到指定位置（小写e）
+   - E，将整数、浮点数转换成科学计数法，并将其格式化到指定位置（大写E）
+   - f， 将整数、浮点数转换成浮点数表示，并将其格式化到指定位置（默认保留小数点后6位）
+   - F，同上
+   - g，自动调整将整数、浮点数转换成 浮点型或科学计数法表示（超过6位数用科学计数法），并将其格式化到指定位置（如果是科学计数则是e；）
+   - G，自动调整将整数、浮点数转换成 浮点型或科学计数法表示（超过6位数用科学计数法），并将其格式化到指定位置（如果是科学计数则是E；）
+   - %，当字符串中存在格式化标志时，需要用 %%表示一个百分号
+
+2、整型
+在python3中所有的整型都是int，但是在python2中大的整数类型是long
+```ipython
+In [17]: a=10
+
+In [18]: b=20
+
+In [19]: a+b
+Out[19]: 30
+
+In [20]: a-b
+Out[20]: -10
+
+In [21]: a*b
+Out[21]: 200
+
+In [22]: a/b
+Out[22]: 0.5
+
+In [23]: a%b
+Out[23]: 10
+
+In [24]: a//b #地板除，结果为两数相除的商
+Out[24]: 0
+```
+
+```ipython
+In [17]: int?
+Init signature: int(self, /, *args, **kwargs) 整型数据类型的工厂方法函数
+Docstring:
+int(x=0) -> integer
+int(x, base=10) -> integer
+
+In [22]: int('12')
+Out[22]: 12
+
+In [27]: int('01010101', base=2)
+Out[27]: 85
+
+In [29]: int('0o17263', base=8)
+Out[29]: 7859
+
+In [30]: int('0x1726f3', base=16)
+Out[30]: 1517299
+
+In [31]: a.bit_length?
+Docstring:
+int.bit_length() -> int 数字的二进制的位数长度(至少几位)
+
+Number of bits necessary to represent self in binary.
+>>> bin(37)
+'0b100101'
+>>> (37).bit_length()
+6
+Type:      builtin_function_or_method
+
+In [32]: (1).bit_length()
+Out[32]: 1
+
+In [33]: (2).bit_length()
+Out[33]: 2
+
+In [34]: (3).bit_length()
+Out[34]: 2
+
+In [35]: (4).bit_length()
+Out[35]: 3
+
+In [36]: (5).bit_length()
+Out[36]: 3
+```
+3、布尔类型
+```ipython
+In [4]: b=True
+
+In [5]: b
+Out[5]: True
+
+In [6]: d=False
+
+In [7]: d
+Out[7]: False
+```
+
+#### python 数据结构
+1、列表(list)
+
+> 创建列表
+```ipython
+In [45]: l=[1,2,3,4,5,6,7]
+```
+
+> 读取列表元素
+```ipython
+In [47]: l[0]
+Out[47]: 1
+
+In [48]: l[1]
+Out[48]: 2
+
+In [49]: l[1:]
+Out[49]: [2, 3, 4, 5, 6, 7]
+
+In [50]: l[1:4]
+Out[50]: [2, 3, 4]
+
+In [51]: l[1:-1]
+Out[51]: [2, 3, 4, 5, 6]
+
+In [52]: l[:-1]
+Out[52]: [1, 2, 3, 4, 5, 6]
+
+In [53]: l[-3:-1]
+Out[53]: [5, 6]
+
+In [54]: l[0]='a'
+
+In [55]: del l[-1]
+
+In [56]: l
+Out[56]: ['a', 2, 3, 4, 5, 6]
+
+In [57]: 'a' in l
+Out[57]: True
+```
+> 列表的常用方法
+
+```ipython
+In [61]: l
+Out[61]: ['a', 2, 3, 4, 5, 6]
+
+In [62]: l.append(10) #在列表尾部添加元素
+
+In [64]: l.clear() #将列表清空
+
+In [66]: l=[1,2,3]
+
+In [67]: l.copy() #将列表copy，注意这里是浅copy
+Out[67]: [1, 2, 3]
+
+In [68]: l.count(1) #计算某元素的个数
+Out[68]: 1
+
+In [69]: l.extend([4,5,6]) #将可迭代对象中的元素全部添加到某列表中
+
+In [72]: l.index(2) #返回某个元素的索引位置
+Out[72]: 1
+
+In [73]: l.insert(1, 'a') #在某个索引前插入值
+
+In [75]: l.pop() #删除某索引处的元素，最后一个元素
+Out[75]: 6
+
+In [76]: l.remove('a') # 删除某个值
+
+In [77]: l.sort() #排序，默认字典序
+
+In [78]: l
+Out[78]: [1, 2, 3, 4, 5]
+
+In [79]: l.reverse() #元素反转
+
+In [80]: l
+Out[80]: [5, 4, 3, 2, 1]
+```
+
+2、元祖(tuple)
+元祖中的元素不可被修改，同样用索引取值，支持切片
+```ipython
+In [1]: t=(1,2,3,4)
+
+In [2]: t=(1,) #单元素元祖定义时加个","
+```
+
+元组的方法如下
+```ipython
+In [4]: t.count(1)
+Out[4]: 1
+
+In [5]: t.index(1)
+Out[5]: 0
+```
+
+3、字典(dict)
+字典是一系列键值对的无序集合，其中字典的key必须是可哈希的，value可以是任意值。
+
+```ipython
+In [6]: d1 = {"k1": "v1", "k2": "v2"}
+
+In [7]: d1 = dict(k1="v1", k2="v2")
+
+In [9]: d={1:1,'2':1,False:22, (1,3,4):14}
+
+In [10]: d
+Out[10]: {1: 1, '2': 1, False: 22, (1, 3, 4): 14}
+
+In [11]: d[False]
+Out[11]: 22
+
+In [12]: d[(1,3,4)]
+Out[12]: 14
+
+In [13]: del d[1]
+```
+字典的常用方法：
+```ipython
+In [14]: d.keys() #返回所有的key
+Out[14]: dict_keys(['2', False, (1, 3, 4)])
+
+In [15]: d.values() #返回所有的value
+Out[15]: dict_values([1, 22, 14])
+
+In [16]: d.items() #返回所有的k,v对
+Out[16]: dict_items([('2', 1), (False, 22), ((1, 3, 4), 14)])
+
+In [17]: d.clear() #清空字典
+
+In [18]: d.copy() #浅拷贝
+
+In [19]: dict.fromkeys(["k1","k2", "k3"]) #将序列中的每一个作为key，创建字典
+Out[19]: {'k1': None, 'k2': None, 'k3': None}
+
+In [21]: d.get(1) #获取某个key的值，如果不存在，返回None或指定的值
+Out[21]: '1'
+
+In [23]: d.pop(1) #弹出某个key的值
+Out[23]: '1'
+
+In [24]: d.popitem() #随机弹出某一kvdui
+Out[24]: (3, '3')
+
+In [25]: d.setdefault('a', 'aa') #为字典设置值，但是如果已经存在，就不设置
+Out[25]: 'aa'
+
+In [26]: d
+Out[26]: {2: '2', 'a': 'aa'}
+
+In [28]: d.update({'aa':1,'bb':22}) #更新字典，已经存在的，将值更新，不存在的，直接设置
+
+In [29]: d
+Out[29]: {2: '2', 'a': 'aa', 'aa': 1, 'bb': 22}
+```
+
+4、集合(set)
+由一系列不重复的，无序的可哈希的元素组成的元素集合
+
+ - 元素是无序的
+ - 元素不能重复
+ - 元素必须是可哈希的
+ 
+```ipython
+In [30]: s={1,4,7,0,'a',(1,2)}
+```
+
+集合的常用方法：
+```ipython
+In [31]: s.add('b') #添加元素
+
+In [32]: s.clear()  #清空集合
+
+In [32]: s.copy() #对集合进行浅拷贝
+Out[32]: {(1, 2), 0, 1, 4, 7, 'a', 'b'}
+
+In [33]: s.pop() #随机弹出一个元素
+Out[33]: 0
+
+In [36]: s.remove(1) #移除集合中的某一个元素
+
+In [38]: s.discard('1') #移除集合中的某一个元素,不存在也不会报错
+
+In [57]: s.update({'a','b'}) #更新集合
+```
+
+集合操作
+```ipython
+In [39]: s1={1,2,3,4,5,6,7}
+
+In [40]: s2={2,3,5,7,8,90}
+
+# 交集
+In [41]: s1 & s2
+Out[41]: {2, 3, 5, 7}
+
+In [42]: s1.intersection(s2)
+Out[42]: {2, 3, 5, 7}
+
+# 并集
+In [43]: s1 | s2
+Out[43]: {1, 2, 3, 4, 5, 6, 7, 8, 90}
+
+In [44]: s1.union(s2)
+Out[44]: {1, 2, 3, 4, 5, 6, 7, 8, 90}
+
+# 差集
+In [45]: s1 - s2
+Out[45]: {1, 4, 6}
+
+In [46]: s1.difference(s2)
+Out[46]: {1, 4, 6}
+
+# 补集
+In [47]: s1 ^ s2
+Out[47]: {1, 4, 6, 8, 90}
+
+In [48]: s1.symmetric_difference(s2)
+Out[48]: {1, 4, 6, 8, 90}
+
+In [49]: s1.isdisjoint(s2) #两个集合是否有交集
+Out[49]: False
+
+In [50]: s1.isdisjoint({})
+Out[50]: True
+
+In [55]: s1.issuperset({1,2,3,4,5,6,7,8}) #判断某集合是否是另一集合的超集
+Out[55]: False
+
+In [56]: s1.issubset({1,2,3,4,5,6,7,8}) #判断某集合是否是另一集合的子集
+Out[56]: True
+```
+
+5、不可变集合(frozenset)
+```ipython
+In [61]: s=frozenset([1,2,3,4])
+
+In [62]: s
+Out[62]: frozenset({1, 2, 3, 4})
+```
+
+#### python 内置函数
+![内置函数列表][1]
+1、`len`
+```ipython
+In [27]: len('12321')
+Out[27]: 5
+
+In [28]: len('你好')
+Out[28]: 2
+
+In [29]: len([1,2,3,4,5])
+Out[29]: 5
+```
+
+2、`range`
+> 在python2中range返回的是列表，在python3中返回的是一个可迭代的range对象。
+
+```ipython
+In [31]: range(10)
+Out[31]: range(0, 10)
+
+In [32]: range(1,10)
+Out[32]: range(1, 10)
+
+In [33]: range(1,10, 2)
+Out[33]: range(1, 10, 2)
+```
+3、`sorted`
+排序，默认按照字典序，支持自定义的方式
+自定义比较结果
+
+ - -1 小于
+ - 0 等于
+ - 1 大于
+
+4、`format`
+
+    [[fill]align][sign][#][0][width][,][.precision][type]
+    
+
+ - fill 【可选】空白处填充的字符
+ - align 【可选】对齐方式（需配合width使用）
+   - <，内容左对齐
+   - >，内容右对齐(默认)
+   - ＝，内容右对齐，将符号放置在填充字符的左侧，且只对数字类型有效。即使：符号+填充物+数字
+   - ^，内容居中
+ - sign 【可选】有无符号数字
+   - +，正号加正，负号加负；
+   - -，正号不变，负号加负；
+   - 空格 ，正号空格，负号加负；
+ - # 【可选】对于二进制、八进制、十六进制，如果加上#，会显示 0b/0o/0x，否则不显示
+ - ，【可选】为数字添加分隔符，如：1,000,000
+ - width 【可选】格式化位所占宽度
+ - precision 【可选】小数位保留精度
+ - type 【可选】格式化类型
+   - 传入” 字符串类型 “的参数
+     - s，格式化字符串类型数据
+     - 空白，未指定类型，则默认是None，同s
+   - 传入“ 整数类型 ”的参数
+     - b，将10进制整数自动转换成2进制表示然后格式化
+     - c，将10进制整数自动转换为其对应的unicode字符
+     - d，十进制整数o，将10进制整数自动转换成8进制表示然后格式化；
+     - x，将10进制整数自动转换成16进制表示然后格式化（小写x）
+     - X，将10进制整数自动转换成16进制表示然后格式化（大写X）
+   - 传入“ 浮点型或小数类型 ”的参数
+     - e， 转换为科学计数法（小写e）表示，然后格式化；
+     - E， 转换为科学计数法（大写E）表示，然后格式化;
+     - f ， 转换为浮点型（默认小数点后保留6位）表示，然后格式化；
+     - F， 转换为浮点型（默认小数点后保留6位）表示，然后格式化；
+     - g， 自动在e和f中切换
+     - G， 自动在E和F中切换
+     - %，显示百分比（默认显示小数点后6位）   
+5、`all`
+对序列中的每一个元素做布尔运算，如果所有的都为True，则最终的结果为True，空序列的结果是True
+
+6、`any`
+对序列中的每一个元素做布尔运算，只要有一个为True，则最终的结果为True
+
+7、`bin`
+将十进制转为二进制
+
+8、`bytes`
+转换为字节
+
+9、`callable`
+判断是否是可调用的
+
+10、`chr`
+返回对应的ascii表的字符
+
+11、`dir`
+显示对象的属性和方法列表
+
+12、`divmod`
+返回两数相除的商和余数
+
+13、`getattr`
+14、`setattr`
+15、`hash`
+返回不可变对象的hash值
+
+16、`hex`
+将十进制转为十六进制
+
+17、`oct`
+将十进制转为八进制
+
+18、`isinstance`
+判断某对象是否为某类的实例
+
+19、`locals`
+返回当前作用域的局部变量字典
+
+20、`globals`
+返回全局变量字典
+
+21、`max`
+返回最大值，支持按照自定义函数进行判断
+
+22、`min`
+返回最小值，支持按照自定义函数进行判断
+
+23、`zip`
+函数用于将可迭代的对象作为参数，将对象中对应的元素打包成一个个元组，然后返回由这些元组组成的列表。
+
+24、`ord`
+与chr相反
+
+25、`reversed`
+将序列反转
+
+26、`round`
+四舍五入
+
+27、`slice`
+slice(start, stop[, step])，返回一个切片对象
+
+28、`sum`
+对可迭代序列进行求和
+
+29、`type`
+返回对象的类型
+
+30、`vars`
+如果没有传参，等价于lcoals(), 如果有传参，等价于object.__dict__
+
+31、`__import__`
+导入一个模块
+
+
+#### python 运算符
+
+> +、-、\*、/、%、\*\*、//
+> in
+> \>、\>=、<、<=、==、!=、<>
+> not、and、or
+> =、+=、-=、*=、/=、%=、//=、\*\*=
+
+#### python 条件语句
+
+    if condition:
+        #条件成立时
+        
+    if condition:
+        #条件成立时
+    else:
+        #条件不成立时
+        
+    if condition1:
+        #条件1成立时
+    elif condition2:
+        #条件2成立时
+    else:
+        #以上条件均不成立时
+        
+```python
+num = 10
+if num > 0 and num < 10:
+    print('num less than 10')
+elif num >= 10 and num < 20:
+    print('num less than 20')
+else:
+    print('num more than 20')
+```
+    
+`pass`表示什么都不做
+```python
+if True:
+    pass
+```
+
+#### python 循环
+1、for 循环
+
+    for var in var_list:
+        # do something
+
+2、while循环
+
+    while condition：
+        # do something
+        
+## while循环要特别注意退出条件 ##
+
+举例：
+```python
+n = 1
+while n < 11:
+    print(n)
+    n = n + 1
+```
+
+#### python 函数
+
+    def funcName(parameter):
+        '''
+        文档注释
+        '''
+        #body
+        #函数体
+        
+函数返回值：
+> 在python的函数中，return语句不是必须的，如果没有，会默认返回None
+> return语句后可以跟多个值，多个值会作为一个元祖返回
+     
+函数的参数：
+1、普通形参
+
+    def func(a,b):
+        #body
+        
+    func(1,2)
+    func(b=2, a=1)
+    func(1, b=2)#关键字参数必须在位置参数后面
+     
+2、默认参数
+
+    def f(a,b=None,c=None):
+        #body
+        
+    f(1)
+    f(1,2)
+    f(1,2,3)
+
+3、参数组
+
+    def f(a, *args):
+        "不定长参数，args会存储成一个列表"
+        #body
+        
+    f(1,2)
+    f(1,2,3,4)
+    f(1,2,3,4,5,6)
+    f(1,*[1,2,3,4])//
+    
+    def f(a, **kwargs):
+        "不定长参数，keargs会存储成一个字典"
+        #body
+        
+    f(1)
+    f(1,a=1,b=2)
+    f(1,a=1,b=2,c=4)
+    f(1, **{a=1,b=2,c=4})//
+    
+4、匿名函数
+
+    lambda para: #表达式
+    eg:
+    x = lambda a: a**2
+    x(10)
+    
+5、函数式编程
+
+ - 函数内部不用变量保存状态，不修改变量
+ - 函数即变量，函数可以做为函数的参数，也可以作为返回值
+
+
+尾调用优化
+在函数的最后一步(不是最后一行)进入下一步递归,这种不需要保存上一步状态，直接进入下一层(普通的递归需要保存上一步的状态)
+```python
+
+def bar():
+    print('bar')
+
+def foo():    
+    return bar()
+    
+foo()
+```
+
+高阶函数：
+满足1：参数中包含函数，2：返回值中包含函数，就是所谓的高阶函数
+
+`map`
+用指定的操作处理序列中的每一个元素，得到的结果是一个列表，该列表元素个数及位置与原来一样
+```ipython
+In [1]: map?
+Init signature: map(self, /, *args, **kwargs)
+Docstring:
+map(func, *iterables) --> map object
+
+Make an iterator that computes the function using arguments from
+each of the iterables.  Stops when the shortest iterable is exhausted.
+Type:           type
+```
+
+`reduce`
+将序列的首元素和次元素做指定的操作，得到的元素作为新的首元素，继续该操作直到得到最终的结果
+```ipython
+In [2]: reduce?
+Docstring:
+reduce(function, sequence[, initial]) -> value
+
+Apply a function of two arguments cumulatively to the items of a sequence,
+from left to right, so as to reduce the sequence to a single value.
+For example, reduce(lambda x, y: x+y, [1, 2, 3, 4, 5]) calculates
+((((1+2)+3)+4)+5).  If initial is present, it is placed before the items
+of the sequence in the calculation, and serves as a default when the
+sequence is empty.
+Type:      builtin_function_or_method
+```
+> 注意reduce函数在python3中被移到了functools模块中
+
+`filter`
+用指定操作遍历序列的每一个元素，如果是True则留下来，如果是FALSE则过滤掉
+```ipython
+In [3]: filter?
+Init signature: filter(self, /, *args, **kwargs)
+Docstring:
+filter(function or None, iterable) --> filter object
+
+Return an iterator yielding those items of iterable for which function(item)
+is true. If function is None, return the items that are true.
+Type:           type
+```
+
+#### 函数递归
+
+> 递归必须要有一个退出条件,否则会导致死循环直到内存占尽
+
+```python
+def f(n):
+    if n = 0 or n = 1:
+        return 1
+    else:
+        return f(n-1)*n
+        
+f(10)
+```
+
+#### python 作用域
+1、全局变量
+全局变量在全局生效
+2、局部变量
+在子程序中定义，只在子程序中生效
+
+变量的查找顺序：首先查找局部变量，如果找不到，则查找全局变量
+
+`global`
+如果想要在局部直接操作全局变量，则需要用global修饰变量
+```python
+name = 'sjl'
+def out():
+    name = 'sjl421'
+    def in():
+        global name
+        name = 'sjl_421' #直接将全局的name修改了
+        print(name)
+    in()
+    print(name)
+    
+print(name) #sjl
+out() #sjl421
+print(name)#sjl_421
+```
+`nonlocal`
+如果想要在局部操作上一级变量，则需要用nonlocal修饰变量
+```python
+name = 'sjl'
+def out():
+    name = 'sjl421'
+    def in():
+        nonlocal name
+        name = 'sjl_421' #直接将上级的name修改了
+    in()
+    print(name)
+    
+print(name) #sjl
+out() #sjl_421
+print(name) #sjl
+```
+
+#### python文件操作
+
+    #文件处理的步骤
+    # 1. 打开文件
+    f_handler = open(file_name)#以系统默认编码打开
+    # 2. 处理文件
+    f_handler.read()
+    # 3. 关闭文件
+    f_handler.close()
+    
+文件打开模式：
+
+ - r 只读
+ - w 只写，如果文件存在，会将文件内容清空，如果不存在，会新建文件
+ - a 追加
+ - r+ 打开可读写的文件，该文件必须存在。 
+ - w+ 打开可读写文件，若文件存在则文件长度清为零，即该文件内容会消失。若文件不存在则建立该文件。
+ - a+ 以附加方式打开可读写的文件。若文件不存在，则会建立该文件，如果文件存在，写入的数据会被加到文件尾后，即文件原先的内容会被保留。 
+ - rb 二进制读
+ - wb 二进制写
+ - ab 二进制追加
+ 
+> 注意以b的方式打开文件时，文件的编码不需要指定
+> 在Linux平台，文件默认就是二进制的
+ 
+
+常用方法：
+1、`readable`
+是否可读
+2、`readline`
+读取一行
+3、`readlines`
+读取所有行
+4、`read`
+从光标当前位置读取后面所有内容
+5、`write`
+往文件中写内容
+6、`writelines`
+以列表的形式往文件中写内容
+7、`flush`
+将缓冲区内容立即写入文件
+8、`seek`
+移动光标，默认从文件开头进行移动，seek支持一下三种模式：
+
+ - 0 0代表从文件开头算起，
+ - 1 1代表开始从当前位置开始算起，
+ - 2 2代表从文件末尾开始算起。
+ 
+> 注意，模式为2时，移动偏移量要设置成负值才能正确的移动
+
+
+9、`tell`
+返回光标当前所在位置
+10、`truncate`
+文件截取，注意必须是位于写模式
+
+
+with语句块
+会自动关闭文件句柄
+    with open(filename) as f:
+        # do something
+        
+举例：寻找文件最后一行
+```python
+
+file_name = ""
+f = open(file_name, 'rb')
+for i in f:
+    offset = -10
+    while True:
+        f.seek(offset, 2)
+        data = f.readlines()
+        if len(data) > 1:
+            print('最后一行是%s'%data[-1])
+            break
+            
+        offset *= 2
+
+
+f.close()
+
+```
+    
+day18-05
+  [1]: http://chuantu.biz/t6/354/1533745102x-1376440240.png
