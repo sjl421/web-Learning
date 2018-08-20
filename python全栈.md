@@ -3,6 +3,7 @@
 标签（空格分隔）： python 全栈
 
 [TOC]
+
 ---
 
 python全栈教程，来自老男孩第三期
@@ -1038,5 +1039,487 @@ f.close()
 
 ```
     
-day18-05
+#### 迭代器和生成器
+**迭代器协议**：对象必须提供一个next方法，执行该方法要么返回迭代中的下一项，要么就引起一个StopIteration异常，以终止迭代 （只能往后走不能往前退）
+
+实现了迭代器协议的对象就是可迭代对象(包含__iter__()方法)
+
+> for循环的本质就是对一个可迭代对象(或者可以转换为可迭代对象的对象，也就是包含__iter__方法)进行遍历。for循环就是基于迭代器协议实现统一的可以遍历所有对象的方法。
+
+> next()方法等价于obj.__next__(), 
+
+**生成器**:可以理解为一种数据类型，这种类型自动实现了迭代器协议，所以生成器就是可迭代对象。
+
+ 1. 函数内存在yield语句，该函数就是生成器类型，可以存在多个yield语句
+ 2. 生成器表达式，类似于列表推导式，见下面
+
+#### 装饰器
+本质就是函数，为其他函数实现附加功能
+
+原则：
+1、不修改被修饰函数的源代码
+2、不修改被修饰函数的调用方式
+
+    #装饰器语法糖，相当于myFunc=wrapper(myFunc)
+    @wrapper
+    def myFunc(*args, **kwargs):
+        pass
+        
+    def wrapper(func):
+        #外部闭包环境
+        def innerWrapper(*args, **kwargs):
+            #函数嵌套，内部函数被返回
+            res = func(*args, **kwargs)
+            return res
+        return innerWrapper
+        
+    myFunc(......)#调用
+    
+    
+带参装饰器：
+
+    @wrapper(para="some_value")
+    def myFunc(*args, **kwargs):
+        pass
+        
+    def func_wrapper(para=value):
+        def wrapper(func):
+            #外部闭包环境
+            def innerWrapper(*args, **kwargs):
+                #函数嵌套，内部函数被返回
+                res = func(*args, **kwargs)
+                return res
+            return innerWrapper
+        return wrapper
+    myFunc(......)#调用
+
+**闭包**：闭包是由函数及其相关的引用环境组合而成的实体(即：闭包=函数+引用环境),
+按照命令式语言的规则，ExFunc函数只是返回了内嵌函数InsFunc的地址，在执行InsFunc函数时将会由于在其作用域内找不到sum变量而出 错。而在函数式语言中，当内嵌函数体内引用到体外的变量时，将会把定义时涉及到的引用环境和函数体打包成一个整体（闭包）返回。
+
+    def outer():
+    
+        # 外部函数的作用域
+        def inner():
+            # body
+            
+        # 将内部函数返回，内部函数会保留当前作用域的环境，形成闭包
+        return inner
+        
+序列解压：
+
+```ipython
+In [1]: a, *_, c = [1,2,3,4]
+
+In [2]: a
+Out[2]: 1
+
+In [3]: c
+Out[3]: 4
+
+In [4]: a, b, *c = [1,2,3,4]
+
+In [5]: a
+Out[5]: 1
+
+In [6]: b
+Out[6]: 2
+
+In [7]: c
+Out[7]: [3, 4]
+```
+
+装饰器举例：
+```python
+
+user_list=[
+    {'name':'sjl','passwd':'123'},
+    {'name':'sjl421','passwd':'123'},
+    {'name':'songjl','passwd':'123'},
+    {'name':'sjl_421','passwd':'123'},
+]
+
+current_user={'username':None,'login':False}
+
+def auth_deco(func):
+    def wrapper(*args,**kwargs):
+        if current_user['username'] and current_user['login']:
+            res=func(*args,**kwargs)
+            return res
+        username=input('用户名: ').strip()
+        passwd=input('密码: ').strip()
+
+        for index,user_dic in enumerate(user_list):
+            if username == user_dic['name'] and passwd == user_dic['passwd']:
+                current_user['username']=username
+
+                current_user['login']=True
+                res=func(*args,**kwargs)
+                return res
+                break
+        else:
+            print('用户名或者密码错误,重新登录')
+
+    return wrapper
+
+@auth_deco
+def index():
+    print('欢迎来到主页面')
+            
+```
+
+
+
+#### 推导式
+
+1、列表推导式
+
+    [ v for v in some_iter]
+    # 结合三元表达式
+    [ v for v in some_iter if condition ]
+    
+2、字典推导式
+
+    { K:v for k in some_iter}
+
+3、生成器表达式
+
+    ( v for v in some_iter )
+
+
+#### python 对象拷贝
+**浅拷**贝：`copy.copy`，拷贝父对象，不会拷贝对象的内部的子对象。
+![此处输入图片的描述][2]
+
+**深拷贝**：`copy.deepcopy`，完全拷贝了父对象及其子对象。
+![此处输入图片的描述][3]
+
+
+#### python 模块
+
+在python中，一个py文件就是一个模块。
+模块的导入
+
+    import module
+
+或者
+
+    from module import (class|const|function)
+    
+> - 注意import导入时会把脚本执行
+
+> - from方式导入时同样会将脚本执行
+
+> - 导入模块时默认从sys.path从按照顺序查找，如果模块不再sys.path中，则需要将模块添加到sys.path中
+
+`__name__`
+当脚本直接被执行时，`__name__`的值是`__main__`，当脚本被作为模块导入时，__name__的值为作为模块的路径名
+```python
+if __name__ == "__main__":
+    # body
+```
+
+`__file__`
+当前文件的文件名(注意打印的仅仅是文件名)
+
+#### python 常用模块
+1、`time`
+
+
+
+ - `time.time()`  #从1970年1月1号到现在的秒数
+ - `time.localtime()` #当前时间的struct_time对象
+ - `time.gmtime()` #当前时间的struct_time对象(UTC时间)
+ - `time.mktime(struct_time)` #将一个struct_time对象转化为时间戳
+ - `time.strftime(time_format, struct_time)` #将struct_time对象转化为指定格式的时间字符串
+   - %Y  Year with century as a decimal number.
+   - %m  Month as a decimal number [01,12].
+   - %d  Day of the month as a decimal number [01,31].
+   - %H  Hour (24-hour clock) as a decimal number [00,23].
+   - %M  Minute as a decimal number [00,59].
+   - %S  Second as a decimal number [00,61].
+   - %z  Time zone offset from UTC.
+   - %a  Locale's abbreviated weekday name.
+   - %A  Locale's full weekday name.
+   - %b  Locale's abbreviated month name.
+   - %B  Locale's full month name.
+   - %c  Locale's appropriate date and time representation.
+   - %I  Hour (12-hour clock) as a decimal number [01,12].
+   - %p  Locale's equivalent of either AM or PM.
+ - `time.strptime(string, format)` #将指定格式的时间字符串转化为struct_time对象
+
+2、`random`
+
+ - random.random() #返回[0,1)的浮点数
+ - random.randint(a, b) #返回[a，b]之间的整数
+ - random.randrange(a,b) #返回[a,b)之间的整数
+ - random.choice(list) #返回list的一个随机元素
+ - random.sample(set, num) #从一个元素集合中取num个样品
+ - random.uniform(a,b) #返回a,b之间的一个随机数
+ - random.shuffle(list) #将一个元素集合打乱顺序
+
+生成随机验证码：
+```python
+
+def v_code():
+    ret = ""
+    for i in range(5):
+        num = random.randint(0,9)
+        alf = chr(random.randint(65,122))
+        ret += str(random.choice([num, alf]))
+
+    return ret
+```
+ 
+
+3、`os`
+
+ - `os.getcwd()` #获取当前工作目录，即python脚本执行目录
+ - `os.chdir()` #改变工作目录
+ - `os.curdir` #返回当前工作目录('.')
+ - `os.pardir` #返回当前目录的父目录('..')
+ - `os.makedirs()` #递归创建目录
+ - `os.removedirs()` #递归删除目录
+ - `os.mkdir()` #创建单级目录
+ - `os.rmdir()` #删除单级目录
+ - `os.listdir()` #列出指定目录下的所有文件和子目录
+ - `os.remove()` #删除一个文件
+ - `os.rename()` #重命名文件/目录
+ - `os.stat()` #获取文件/目录信息
+ - `os.sep` #操作系统特定的路径分隔符
+ - `os.linesep` #操作系统特定的行分割符
+ - `os.pathsep` #操作系统特定的分割文件路径的字符串
+ - `os.name` #输出字符串指示当前使用平台
+ - `os.system()` #运行shell命令
+ - `os.environ` #获取系统环境变量
+ - `os.path.split()` #将path分割成目录和文件名的元祖
+ - `os.path.abspath` #返回绝对路径
+ - `os.path.dirname` #返回path的目录
+ - `os.path.basename` #返回path最后的文件名
+ - `os.path.exists()` #判断path是否存在
+ - `os.path.isabs()` #判断path是否是绝对路径
+ - `os.path.isfile()` #判断路径是否是文件
+ - `os.path.isdir()` #判断路径是否是目录
+ - `os.path.join()` #将多个路径组合后返回
+ - `os.path.getatime()` #获取路径的最后访问时间
+ - `os.path.getmtime()` #获取路径的最后修改时间
+
+4、`sys`
+
+ - sys.argv #命令行参数，第一个元素是程序本身
+ - sys.exit() #退出程序
+ - sys.version #获取python解释程序的版本信息
+ - sys.maxint #最大的int值
+ - sys.path #模块搜索路径,初始化时使用PYTHONPATH环境变量的值
+ - sys.platform #返回操作系统平台名称
+ - sys.stdin #标准输入
+ - sys.stdout #标准输出
+ - sys.stderr #标准错误
+
+5、`json`
+
+ - `json.loads` # 将一个json字符串转为python对象
+ - `json.dumps` # 将一个python对象转为json字符串
+ - `json.load` # 从文件中将json数据转为python对象
+ - `json.dump` # 将python对象转为json格式并持久化到一个文件中
+
+6、`pickle`
+ - `pickle.loads` # 将一个pickle字符串转为python对象
+ - `pickle.dumps` # 将一个python对象转为pickle字符串
+ - `pickle.load` # 从文件中将pickle数据转为python对象
+ - `pickle.dump` # 将python对象转为pickle格式并持久化到一个文件中
+ 
+7、`shelve`
+
+ - `shelve.open` #打开一个持久化存储的字典(会生成三个文本)
+
+8、`xml`
+导入xml模块`import xml.etree.ElementTree as ET`，
+
+    1. 解析
+    tree = ET.parse(file_name)
+    2. 获取根节点
+    root_node = tree.getroot()
+    3. 属性和方法
+    root_node.tag #标签名
+    root_node.attrib #属性字典
+    root_node.text #获取节点文本
+    root_node.set(key, value) #设置属性值
+    root_node.write(file_name) #将xml内容写至文件
+    root_node.findall(node_name) #查找节点
+    root_node.remove(node) #移除节点
+    4. 遍历节点
+    for sub_node in root_node:
+        print sub_node
+    #只遍历指定名称的节点    
+    for sub_node in root_node.iter("node_name"):
+        print sub_node
+    5. 创建一个xml文档
+    root = ET.Element("node_name") #根元素
+    ET.SubElement(root, "node_name") # 子元素
+    et = ET.ElementTree(root) # 文档对象
+    et.write(file_name) #保存文档对象
+    ET.dump(root) #打印生成的格式
+
+9、`re`
+
+元字符
+
+ - `.` 匹配除了`\n`之外的所有单字符
+ - `^` 匹配以内容开头
+ - `$` 匹配以内容结尾
+ - `*` 匹配任意个前面的字符
+ - `+` 匹配至少1个前面的字符
+ - `?` 匹配0个或1个前面的字符
+ - `{n}` 匹配n个前面的字符
+ - `{n,m}` 匹配至少n个，至多m个
+ - `[]` 匹配中括号字符集中的一个，`-`表示范围，`^`表示字符集取反，`\`表示转义，其它字符均原样匹配
+ - `[^]` 匹配中括号字符集外的一个
+ - `\` 对特殊的元字符进行转义
+ - `pattern|pattern` 模式1或模式2
+ - `()` 模式分组
+ - `(pattern)` 普通分组
+ - `(?P<name>pattern)` 名称分组
+ - `(?:pattern)` 去掉分组优先级，默认按照分组匹配并返回结果
+ 
+特殊字符集
+ - `\d` 匹配任何十进制数
+ - `\D` 匹配任何非数字字符
+ - `\s` 匹配任何空白字符，包括`\t\n\r\f\v`
+ - `\S` 匹配任何非空白字符
+ - `\w` 匹配任何字母数字字符
+ - `\W` 匹配任何非字母数字字符
+ - `\b` 匹配一个特殊字符边界
+ - r'' 原生字符串，不对字符串里面的内容进行转义
+ 
+re模块的常用方法
+ - `re.findall` 在字符串中按照模式进行查找，会查找全部
+ - `re.search` 在字符串中按照模式进行查找，找到即返回
+ - `re.match` 在字符串中按照模式进行查找，只匹配开头
+ - `re.split` 对字符串按照模式进行分割
+ - `re.sub` 对字符串用指定模式进行替换
+ - `re.subn` 对字符串用指定模式进行替换,返回匹配后内容和匹配次数的元祖
+ - `re.compile` 将模式编译为类型对象
+ - `finditer` 同findall，返回一个迭代器
+ 
+    
+10、`logging`
+
+日志级别:
+debug < info < warning < error < critical
+
+> 默认级别为warning
+
+日志配置
+
+    logging.basicConfig(
+        level, #日志级别
+        filename, #日志文件名
+        filemode, #日志打印模式
+        datefmt, #日期格式
+        format, #日志格式
+        
+    )
+    
+    format格式化字符串：
+        %(levelno)s: 打印日志级别的数值
+        %(levelname)s: 打印日志级别名称
+        %(pathname)s: 打印当前执行程序的路径，其实就是sys.argv[0]
+        %(filename)s: 打印当前执行程序名
+        %(funcName)s: 打印日志的当前函数
+        %(lineno)d: 打印日志的当前行号
+        %(asctime)s: 打印日志的时间
+        %(thread)d: 打印线程ID
+        %(threadName)s: 打印线程名称
+        %(process)d: 打印进程ID
+        %(message)s: 打印日志信息
+
+logger方式打印日志        
+    #生成logger对象,默认是root
+    logger = logging.getLogger() 
+    #设置logger级别
+    logger.setLevel()
+    #设置打印格式
+    fm=logging.Formatter(formatter)
+    #设置输出文件打印
+    f=logging.FileHandler()
+    #设置屏幕输出打印
+    s=logging.StreamHandler()
+    #配置格式
+    f.setFormatter(fm)
+    s.setFormatter(fm)
+    #将打印句柄添加到logger
+    logger.addHandler(f)
+    logger.addHandler(s)
+    
+    #打印日志
+    logger.info()
+    logger.warning()
+    logger.error()
+    logger.debug()
+    
+> 如果一个子logger对象打印，同时父对象也进行了打印，则子对象会将父对象同时打印    
+
+11、configparser
+
+    #ini配置文件格式
+    [section1]
+    key1=value1
+    key2=value2
+    key3=value3
+    key4=value4
+    
+操作配置文件
+    #创建一个config对象
+    cfg=configparse.ConfigParser()
+    #读取配置文件
+    cfg.read()
+    #配置
+    cfg['section'] = {key1:value1, key2:value2}
+    #写入文件
+    cfg.write(fh)
+    #常用方法
+    cfg.sections() #所有的section
+    cfg.items() #某个section的所有配置项
+    cfg.get() #获取某个section某配置项的值
+    cfg.add_section() #添加一个section
+    cfg.remove_section() #移除一个section
+    cfg.remove_option() #从某个section中移除一个配置项
+    cfg.set() #在某个section中添加一个配置项
+    
+
+12、`hashlib`
+
+ - `hashlib.md5()` md5算法
+ - `hashlib.sha1()` sha1算法
+ - `hashlib.sha256()` sha256算法
+ 
+加密过程
+    1. 选择算法
+    md5 = hashlib.md5() #可以设定特定的秘钥
+    2. 更新
+    md5.update()
+    3. 生成md5值
+    md5.hexdigest()
+
+
+#### python 包
+用来组织python的模块，是一个带钩子(`__init__.py`)的文件夹
+
+`__init__.py`: 
+
+
+#### python 面向对象编程
+**类**:类是一个抽象的概念，是把一类具有相同特征和方法的事物整合在一起
+**对象**:基于类而创建的一个具体的事物
+
+    class ClassName(object):
+        def __init__(self, *args, **kwargs):
+            #初始化
+        def method(self):
+            #函数体
+    
+day24-03
+
   [1]: http://chuantu.biz/t6/354/1533745102x-1376440240.png
+  [2]: https://s15.postimg.cc/enh7t3f9n/image.png
+  [3]: https://s15.postimg.cc/xtuevsirf/image.png
